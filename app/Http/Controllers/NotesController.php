@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\note;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class NotesController extends Controller
 {
@@ -29,6 +30,7 @@ class NotesController extends Controller
     public function create()
     {
         //
+        return view('notes.create');
     }
 
     /**
@@ -40,6 +42,20 @@ class NotesController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'title' => 'required|max:120',
+            'text' => 'required'
+        ]);
+
+        note::create([
+            'uuid' => Str::uuid(),
+            'user_id' => Auth::id(),
+            'title' => $request->title,
+            'text' => $request->text
+
+        ]);
+
+        return to_route('notes.index');
     }
 
     /**
